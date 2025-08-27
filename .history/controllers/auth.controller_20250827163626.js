@@ -19,7 +19,7 @@ export const sendWelcomeEmail = async (email, name) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: 'Welcome to Zing Chat!',
+      subject: 'Welcome to ChatApp!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #333;">Welcome to Zing, ${name}! 👋</h1>

@@ -38,21 +38,15 @@ mongoose.connection.on('disconnected', () => console.log('MongoDB disconnected')
 const io = new Server(server, {
   cors: {
     origin: function (origin, callback) {
-      // Allow all origins in development, specific origins in production
-      if (process.env.NODE_ENV === 'development' || !origin) {
+      const allowedOrigins = [
+        'https://zing-chat-mtoa9cbhm-riyas-git-sys-projects.vercel.app',
+        'http://localhost:5173'
+      ];
+      
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        const allowedOrigins = [
-          'https://zing-chat-rho.vercel.app',
-          'https://zing-chat.vercel.app', 
-          'http://localhost:5173'
-        ];
-        
-        if (allowedOrigins.indexOf(origin) !== -1) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
+        callback(new Error('Not allowed by CORS'));
       }
     },
     methods: ['GET', 'POST'],

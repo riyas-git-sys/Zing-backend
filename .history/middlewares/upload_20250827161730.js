@@ -27,7 +27,7 @@ const upload = multer({
 
 // Export both single and array upload options
 export const uploadSingle = upload.single('profilePicture');
-export const uploadArray = upload.array('media', 20); // Max 20 files
+export const uploadArray = upload.array('media', 10); // Max 10 files
 export const uploadAny = upload.any(); // For mixed file types
 
 export default upload;

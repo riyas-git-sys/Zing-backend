@@ -37,24 +37,7 @@ mongoose.connection.on('disconnected', () => console.log('MongoDB disconnected')
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: function (origin, callback) {
-      // Allow all origins in development, specific origins in production
-      if (process.env.NODE_ENV === 'development' || !origin) {
-        callback(null, true);
-      } else {
-        const allowedOrigins = [
-          'https://zing-chat-rho.vercel.app',
-          'https://zing-chat.vercel.app', 
-          'http://localhost:5173'
-        ];
-        
-        if (allowedOrigins.indexOf(origin) !== -1) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      }
-    },
+    origin: 'https://zing-chat-g3pfv3fd7-riyas-git-sys-projects.vercel.app/', // Your deployed frontend URL
     methods: ['GET', 'POST'],
     credentials: true
   },

@@ -42,7 +42,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// app.options('*', cors());
+app.options('*', cors());
 
 app.use(helmet());
 app.use(morgan('dev'));
@@ -105,3 +105,4 @@ app.get('/favicon.ico', (req, res) => {
 });
 
 export default app;
+

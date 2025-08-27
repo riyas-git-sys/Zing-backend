@@ -16,33 +16,54 @@ const app = express();
 // Middlewares
 app.use(express.json()); // This is the key fix - parse JSON bodies
 app.use(express.urlencoded({ extended: true }));
+// app.use(cors({
+//   origin: process.env.NODE_ENV === 'production' 
+//     ? 'https://zing-chat.vercel.app' // Your deployed frontend URL
+//     : 'http://localhost:5173',
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+// }));
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow all origins in development, specific origins in production
-    if (process.env.NODE_ENV === 'development' || !origin) {
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://zing-chat-rho.vercel.app', // Your frontend domain
+      'http://localhost:5173' // For local development
+    ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      const allowedOrigins = [
-        'https://zing-chat-rho.vercel.app',
-        'https://zing-chat.vercel.app',
-        'http://localhost:5173',
-        'http://localhost:3000'
-      ];
-      
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        console.log('CORS blocked for origin:', origin);
-        callback(new Error('Not allowed by CORS'));
-      }
+      console.log('CORS blocked for origin:', origin);
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Requested-With']
 }));
 
-// app.options('*', cors());
+// Add this after your CORS configuration
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'https://zing-chat-rho.vercel.app');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+//   next();
+// });
+
+// Handle preflight requests
+app.options('*', cors());
+// app.options('*', (req, res) => {
+//   res.header('Access-Control-Allow-Origin', 'https://zing-chat-rho.vercel.app');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+//   res.sendStatus(200);
+// });
 
 app.use(helmet());
 app.use(morgan('dev'));
@@ -66,7 +87,6 @@ app.get('/api/health', (req, res) => {
 import authRoutes from './routes/authRoutes.js';
 import chatRoutes from './routes/chats.js';
 import messageRoutes from './routes/message.routes.js';
-import { profile } from 'console';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/chats', chatRoutes);
@@ -89,19 +109,6 @@ app.get('/api', (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
-});
-
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Server is running',
-    api: 'Use /api for API endpoints',
-    health: 'Use /api/health for health check'
-  });
-});
-
-// Handle favicon requests
-app.get('/favicon.ico', (req, res) => {
-  res.status(204).end();
 });
 
 export default app;

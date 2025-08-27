@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: function (origin, callback) {
     // Allow all origins in development, specific origins in production
-    if (process.env.NODE_ENV === 'development' || !origin) {
+    if (process.env.NODE_ENV === 'production' || !origin) {
       callback(null, true);
     } else {
       const allowedOrigins = [

@@ -42,7 +42,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// app.options('*', cors());
+app.options('*', cors());
 
 app.use(helmet());
 app.use(morgan('dev'));
@@ -89,19 +89,6 @@ app.get('/api', (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
-});
-
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Server is running',
-    api: 'Use /api for API endpoints',
-    health: 'Use /api/health for health check'
-  });
-});
-
-// Handle favicon requests
-app.get('/favicon.ico', (req, res) => {
-  res.status(204).end();
 });
 
 export default app;

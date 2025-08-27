@@ -19,11 +19,11 @@ export const sendWelcomeEmail = async (email, name) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
-      subject: 'Welcome to Zing Chat!',
+      subject: 'Welcome to ChatApp!',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #333;">Welcome to Zing, ${name}! 👋</h1>
-          <p>Thank you for registering with Zing. We're excited to have you on board!</p>
+          <h1 style="color: #333;">Welcome to ChatApp, ${name}! 👋</h1>
+          <p>Thank you for registering with ChatApp. We're excited to have you on board!</p>
           <p>Start connecting with your friends and family right away:</p>
           <ul>
             <li>💬 Send messages instantly</li>
@@ -33,7 +33,7 @@ export const sendWelcomeEmail = async (email, name) => {
           </ul>
           <p>If you have any questions, feel free to reply to this email.</p>
           <br>
-          <p>Happy Zinging! 🎉</p>
+          <p>Happy chatting! 🎉</p>
           <hr style="border: none; border-top: 1px solid #eee;">
           <p style="color: #999; font-size: 12px;">
             This is an automated message from ChatApp. Please do not reply directly to this email.

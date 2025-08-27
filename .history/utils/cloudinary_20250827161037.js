@@ -16,7 +16,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// For serverless environments (Vercel), upload directly from buffer
+// For serverless environments (Vercel), we need to upload directly from buffer
 export const uploadToCloudinary = async (file) => {
   try {
     if (!file) {
@@ -28,17 +28,18 @@ export const uploadToCloudinary = async (file) => {
       originalname: file.originalname,
       size: file.size,
       mimetype: file.mimetype,
-      hasBuffer: !!file.buffer
+      hasBuffer: !!file.buffer,
+      hasPath: !!file.path
     });
 
-    // Use buffer upload for serverless environment
+    // For Vercel/serverless environments, use buffer upload
     if (file.buffer) {
       console.log('Using buffer upload for serverless environment');
       
       return new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
-            resource_type: 'auto', // Automatically detect image/video
+            resource_type: 'auto',
             folder: 'chat_app',
           },
           (error, result) => {
@@ -58,8 +59,35 @@ export const uploadToCloudinary = async (file) => {
         bufferStream.pipe(uploadStream);
       });
     }
+    
+    // For local development with file path
+    if (file.path) {
+      const fs = await import('fs');
+      
+      // Check if file exists locally
+      if (!fs.existsSync(file.path)) {
+        console.error('File does not exist at path:', file.path);
+        throw new Error('File not found on server');
+      }
 
-    throw new Error('No file buffer available for upload');
+      // Upload file to Cloudinary
+      const result = await cloudinary.uploader.upload(file.path, {
+        resource_type: 'auto',
+        folder: 'chat_app',
+      });
+
+      console.log('Cloudinary upload successful:', result.secure_url);
+
+      // Delete file from local storage
+      if (fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+        console.log('Local file deleted:', file.path);
+      }
+
+      return result;
+    }
+
+    throw new Error('No file buffer or path available for upload');
 
   } catch (error) {
     console.error('Cloudinary upload error:', error);
