@@ -1,5 +1,7 @@
 # Zing Chat - Backend
 
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&pause=1000&color=154DF7&multiline=true&width=750&height=100&lines=Zing+Chat!%F0%9F%92%AB+Exclusive+Application+for+Chatting+%F0%9F%99%8C+;Happy+Zinging%E2%9D%A4%EF%B8%8F+;Get+in+Touch+With+You+Friends+and+Collageous+%F0%9F%92%95)](https://git.io/typing-svg)
+
 A robust Node.js backend with Express and MongoDB that powers the Zing chat application, providing real-time messaging capabilities with Socket.io.
 
 ---
